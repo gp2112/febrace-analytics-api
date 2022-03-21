@@ -14,7 +14,8 @@ class School:
     estado: str
     tipo: str
 
-def getSchools():
+def getSchools(info: Info):
+    print(info.selected_fields[0].selections)
     return [
             School(id=1,
                     nome='abel',
