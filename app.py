@@ -4,7 +4,7 @@ import typing
 from fastapi import FastAPI
 from strawberry.types import Info
 from strawberry.fastapi import GraphQLRouter
-
+import model
 
 @strawberry.type
 class School:
@@ -15,15 +15,9 @@ class School:
     tipo: str
 
 def getSchools(info: Info):
-    print(info.selected_fields[0].selections)
-    return [
-            School(id=1,
-                    nome='abel',
-                    cidade='Niteroi',
-                    estado='RJ',
-                    tipo='privada'
-            )
-        ]
+    selections = tuple(info.selected_fields[0].selections)
+    fields = [s.name for s in selections] 
+    return model.get_schools(fields, limit=50)
 
 @strawberry.type
 class Query:
