@@ -9,15 +9,15 @@ import model
 @strawberry.type
 class School:
     id: int
-    nome: str
-    cidade: str
-    estado: str
-    tipo: str
+    escola: str
+    telefone: str
+    uf: str
 
 def getSchools(info: Info):
     selections = tuple(info.selected_fields[0].selections)
-    fields = [s.name for s in selections] 
-    return model.get_schools(fields, limit=50)
+    fields = [s.name for s in selections]
+    print(fields)
+    return model.get_schools(fields, limit=5)
 
 @strawberry.type
 class Query:
