@@ -39,16 +39,22 @@ class Athena:
             r = self.client.get_query_execution(QueryExecutionId=query_id)
         
         return r['QueryExecution']['Status']['State']
+    
+    # __parse_data:
+    # parse the brute data received from Athena for a more convenient dictionary format
+    # check https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.get_query_results
 
     def __parse_data(self, brute_data: dict) -> dict:
         columns = brute_data['ResultSet']['ResultSetMetadata']['ColumnInfo']
         data = []
-        for row in brute_data['ResultSet']['Rows']:
+        for row in brute_data['ResultSet']['Rows'][1:]:   #ignore the first row (columns names)
             d = {}
             for i, column in enumerate(columns):
-                d[column['Name']] = row['Data'][i]['VarCharValue']
+                d[column['Name']] = None
+                if 'VarCharValue' in row['Data'][i]:
+                    d[column['Name']] = row['Data'][i]['VarCharValue']
             data.append(d)
-        return d
+        return data
 
     def query(self, query_str: str) -> dict:
         r = self.client.start_query_execution(
