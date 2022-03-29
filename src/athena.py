@@ -54,7 +54,17 @@ class Athena:
                     d[column['Name']] = row['Data'][i]['VarCharValue']
             data.append(d)
         return data
-
+    
+    def table_columns(self, table_name: str) -> dict:
+        r = self.client.get_table_metadata(
+                    CatalogName=self.__catalog,
+                    DatabaseName=self.__database,
+                    TableName=table_name
+                )
+        if 'TableMetadata' not in r:
+            return None
+        return r['TableMetadata'].get('Columns')
+    
     def query(self, query_str: str) -> dict:
         r = self.client.start_query_execution(
                 QueryString = query_str,
@@ -72,7 +82,7 @@ class Athena:
         status = status_result['QueryExecution']['Status']['State']
         
         if status != 'SUCCEEDED':
-            raise Exception(f"Query Error: {status_result['QueryExecution']['Status']['StateChangeReason']}")
+            raise Exception(status_result['QueryExecution']['Status']['StateChangeReason'])
         
         r = self.client.get_query_results(QueryExecutionId=queryExId)
         data = self.__parse_data(r)
