@@ -1,6 +1,8 @@
 # Virtual Environment
 .env/*
 
+*.ignore
+
 #useless jsons..
 *.json
 
