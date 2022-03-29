@@ -1,35 +1,52 @@
-import strawberry
-import typing
-
 from fastapi import FastAPI
-from strawberry.types import Info
-from strawberry.fastapi import GraphQLRouter
-import model
-
-@strawberry.type
-class School:
-    id: int
-    escola: str
-    telefone: str
-    uf: str
-
-def getSchools(info: Info):
-    selections = tuple(info.selected_fields[0].selections)
-    fields = [s.name for s in selections]
-    print(fields)
-    return model.get_schools(fields, limit=5)
-
-@strawberry.type
-class Query:
-    schools: typing.List[School] = strawberry.field(resolver=getSchools)
-
-schema = strawberry.Schema(Query)
-
-graphql_app = GraphQLRouter(schema)
+import athena
 
 app = FastAPI()
-app.include_router(graphql_app, prefix='/graphql')
+
+LIMIT = 100 #default limit
+queryResultLocation = 's3://mestrado-educacao/application-athena-query/'
+awsProfile = 'febrace'
+awsCatalog = 'AwsDataCatalog'
+
+def parse_fields(fields: str) -> list:
+    return fields.replace(' ', '').split(',')
+
+@app.get('/escolas')
+async def escolas(fields: str, limit: int=LIMIT) -> dict:
+    fields = parse_fields(fields)
+    a = athena.Athena(awsCatalog, 'education', queryResultLocation, profile=awsProfile)
+    
+    try:
+        data = a.query(f'SELECT {",".join(fields)} FROM "escolas_parquet" LIMIT {limit}')
+    except Exception as e:
+        return {'error':str(e)}, 404
+
+    return data
+
+@app.get('/matriculas')
+async def matriculas(fields: str, limit: int=LIMIT) -> dict:
+    fields = parse_fields(fields)
+    a = athena.Athena(awsCatalog, 'education', queryResultLocation, profile=awsProfile)
+    data = a.query(f'SELECT {",".join(fields)} FROM "matriculas-parquet" LIMIT {limit}')
+
+    return data
+
+@app.get('/docentes')
+async def docentes(fields: str, limit: int=LIMIT) -> dict:
+    fields = parse_fields(fields)
+    a = athena.Athena(awsCatalog, 'education', queryResultLocation, profile=awsProfile)
+    data = a.query(f'SELECT {",".join(fields)} FROM "docentes_parquet" LIMIT {limit}')
+    
+    return data
+
+@app.get('/turmas')
+async def turmas(fields: str, limit: int=LIMIT) -> dict:
+    fields = parse_fields(fields)
+    a = athena.Athena(awsCatalog, 'education', queryResultLocation, profile=awsProfile)
+    data = a.query(f'SELECT {",".join(fields)} FROM "turmas_parquet" LIMIT {limit}')
+    
+    return data
 
 @app.get('/')
-def home():
-    return {'teste':'oi'}
+async def root():
+    return {'main':'root'}

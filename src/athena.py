@@ -38,8 +38,7 @@ class Athena:
         while r['QueryExecution']['Status']['State'] in ('QUEUED', 'RUNNING'):
             r = self.client.get_query_execution(QueryExecutionId=query_id)
         
-        return r['QueryExecution']['Status']['State']
-    
+        return r 
     # __parse_data:
     # parse the brute data received from Athena for a more convenient dictionary format
     # check https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.get_query_results
@@ -67,17 +66,21 @@ class Athena:
                     'OutputLocation':self.__result_loc
                 }
             )
-        status_result = self.__wait_until_query_complete(r['QueryExecutionId'])
-        if status_result != 'SUCCEEDED':
-            raise Exception("Query Error!")
+        queryExId = r['QueryExecutionId']    
+    
+        status_result = self.__wait_until_query_complete(queryExId)
+        status = status_result['QueryExecution']['Status']['State']
         
-        r = self.client.get_query_results(QueryExecutionId=r['QueryExecutionId'])
+        if status != 'SUCCEEDED':
+            raise Exception(f"Query Error: {status_result['QueryExecution']['Status']['StateChangeReason']}")
+        
+        r = self.client.get_query_results(QueryExecutionId=queryExId)
         data = self.__parse_data(r)
-        
+          
         # paginate
         while 'NextToken' in r:
             r = self.client.get_query_results(
-                        QueryExecutionId=r['QueryExecutionId'],
+                        QueryExecutionId=queryExId,
                         NextToken=r['NextToken']
                     )
             data += self.__parse_data(r)            
