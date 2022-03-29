@@ -47,7 +47,7 @@ class Athena:
     def __parse_data(self, brute_data: dict) -> dict:
         columns = brute_data['ResultSet']['ResultSetMetadata']['ColumnInfo']
         data = []
-        for row in brute_data['ResultSet']['Rows'][1:]:   #ignore the first row (columns names)
+        for row in brute_data['ResultSet']['Rows']:   #ignore the first row (columns names)
             d = {}
             for i, column in enumerate(columns):
                 d[column['Name']] = None
@@ -72,6 +72,17 @@ class Athena:
             raise Exception("Query Error!")
         
         r = self.client.get_query_results(QueryExecutionId=r['QueryExecutionId'])
-        return self.__parse_data(r)
+        data = self.__parse_data(r)
+        
+        # paginate
+        while 'NextToken' in r:
+            r = self.client.get_query_results(
+                        QueryExecutionId=r['QueryExecutionId'],
+                        NextToken=r['NextToken']
+                    )
+            data += self.__parse_data(r)            
+        return data[1:]
+
+
 
 
