@@ -21,11 +21,20 @@ def make_query(table: str, fields: list='*', filters: list=None, limit: int=LIMI
     
     if len(filters) > 0:
         query += ' WHERE'
-
+    
+    i = False
     for fil in filters:
+        if i: query += ' AND'
+        i = True
+        
+        # if the field is string, use blades
+        blds = "'" if type(fil.get('equals')) is str else ''
+
         query += f" {fil['field']}"
-        if 'equals' in fil:
-            query += f"='{fil['equals']}'"
+        if 'bigger' in fil and 'lower' in fil:
+            query += f" BETWEEN {fil['bigger']} AND {fil['lower']}"
+        elif 'equals' in fil:
+            query += f"={blds}{fil['equals']}{blds}"
         elif 'bigger' in fil:
             query += f">{fil['bigger']}"
         elif 'lower' in fil:
@@ -52,6 +61,7 @@ async def query_table(table: str, fields: str, response: Response,
     a = athena.Athena(awsCatalog, 'education', queryResultLocation, profile=awsProfile)
     if filters is not None:
         filters = json.loads(filters)
+    print(filters)
        
     try:
         table = get_table(table)

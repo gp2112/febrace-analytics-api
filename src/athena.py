@@ -9,7 +9,6 @@ You mmust configure your aws credentials with aws cli.
 
 class Athena:
 
-    client = boto3.client('athena')
 
     def __init__(self, catalog: str, database: str, result_loc: str, profile: str=None):
         

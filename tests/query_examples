@@ -1,0 +1,1 @@
+http://127.0.0.1:8000/matriculas?fields=nu_ano&filters=[{%22field%22:%22nu_ano%22,%20%22bigger%22:2008,%20%22lower%22:2011}]&limit=10
