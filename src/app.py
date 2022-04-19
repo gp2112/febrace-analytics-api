@@ -15,9 +15,9 @@ def parse_fields(fields: str) -> list:
     return fields.replace(' ', '').split(',')
 
 def make_query(table: str, fields: list='*', filters: list=None, limit: int=LIMIT) -> str:
-    if fields is not None: fields="', '".join(fields)
+    if fields is not None: fields=", ".join(fields)
     if filters is None: filters=list() 
-    query = f'SELECT "{fields}" FROM "{table}"'
+    query = f'SELECT {fields} FROM "{table}"'
     
     if len(filters) > 0:
         query += ' WHERE'
@@ -39,6 +39,8 @@ def make_query(table: str, fields: list='*', filters: list=None, limit: int=LIMI
             query += f">{fil['bigger']}"
         elif 'lower' in fil:
             query += f"<{fil['lower']}"
+        elif 'diff' in fil:
+            query += f"!={fil['diff']}"
     query += f" LIMIT {limit}"
     print(query)
     return query
