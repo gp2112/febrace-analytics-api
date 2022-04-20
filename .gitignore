@@ -7,7 +7,7 @@
 *.ignore
 
 #useless jsons..
-*.json
+#ign*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

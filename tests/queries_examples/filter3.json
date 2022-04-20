@@ -1,0 +1,10 @@
+{
+    "and":[
+            {"or":[
+                    {"field":"nu_ano", "bigger":2010},
+                    {"field":"in_surdez", "equals":1}
+                ]
+            },
+            {"field":"nu_ano_censo", "equals":2020}
+    ]
+}

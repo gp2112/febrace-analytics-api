@@ -1,0 +1,6 @@
+{
+    "or":[
+            {"field":"nu_ano", "equals":2007},
+            {"field":"nu_ano", "equals":2011}
+    ]
+}
