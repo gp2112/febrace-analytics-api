@@ -2,8 +2,12 @@
 
 ## Requirements
 
-`python -m venv .env`
-
-`source .env/bin/activate`
-
+if you don't have venv installed:\
+`pip install virtualenv`\
+then:\
+`python -m venv .env`\
+`source .env/bin/activate`\
 `pip install -r requirements`
+
+## Running
+`cd src && uvicorn app:app`
