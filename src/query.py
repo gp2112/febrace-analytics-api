@@ -1,4 +1,3 @@
-
 ops = {
     'equals':'=',
     'bigger':'>',
@@ -71,19 +70,63 @@ def make_query_sql(query: dict):
 
 # {'or':[{'and':[{'field':'nu_ano', 'value':2001}, {'field':'nu_usp', 'value':992}]}, {'value'}]}
 
+
+'''
+Makes a sql WHERE clasule from a JSON query.
+As the JSON query can be recoursive, it will be interpreted as a Tree.
+
+The JSON Query can be:
+    1- A operation: {"{operation}":{subqueries list}}
+    2- A single query: {"field":{field_name}, "{comp_operator}":{value}}
+
+The Operation Query is any non-leaf tree's node and can represent "and" and "or" operations.
+For example: 
+    {
+        "or": [subquery1, subquery2]
+    }
+
+    In sql notation this would be: "... WHERE subquery1 OR subquery2".
+
+Every Tree's Leaf represents a Single Query.
+For example:
+    {
+        "or": [
+                {"field":"nu_ano", "equals":2007},
+                {"field":"nu_ano", "equals":2010}
+            ]
+    }
+
+    In SQL this would be "... WHERE nu_ano=2007 OR nu_ano=2010".
+
+Example in a Tree:
+           
+            OR
+          /    \
+        AND    {"field":"nu_ano"...}      
+      /    \
+{"field"...} {"field"...}
+
+To parse all the Query Tree, the algorithm uses an postorder tree transversal algorithm
+
+'''
+
 def parse_where(query: dict, is_root: bool=False):
     # if it has 'field' paramter, it's a leaf
+    # so, return the single query string
     if 'field' in query:
         return make_query_sql(query)
 
     if 'or' not in query and 'and' not in query:
         raise Exception('Query Dictionary without operation ("or" or "and")')
 
+    # attribute the operation in Operation Query to "op" variable
     op = list(query.keys())[0].upper()
 
+    # all child nodes from quey subtree is allocated in subqueries list
     subqueries = []
     for sub_query in list(query.values())[0]:
         subqueries.append(parse_where(sub_query))
+    
     sql = f' {op} '.join(subqueries)
     if not is_root and op == 'OR':
         sql = f'({sql})' # if it's OR and not root, use brackets
