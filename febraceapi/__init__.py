@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response
-import athena
+from febraceapi import athena
+from febraceapi.query import make_query
 import json
-from query import make_query
 
 app = FastAPI()
 
