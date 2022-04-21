@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response
 from febraceapi import athena
-from febraceapi.query import make_query
+from febraceapi import query
 import json
 
 app = FastAPI()
@@ -39,7 +39,7 @@ async def query_table(table: str, fields: str, response: Response,
 
     try:
         table = get_table(table)
-        data = a.query(make_query(table, fields, filters, limit))
+        data = a.query(query.make_query(table, fields, filters, limit))
     except Exception as e:
         response.status_code = 400
         return {'error': str(e)}
