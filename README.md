@@ -45,4 +45,4 @@ For example:
     ]
 }
 ```
-This would be converted to `"... WHERE (nu_ano=2010 OR in_surdez=1) AND nu_ano_censo=2020"` in SQL
+is equivalent to `"... WHERE (nu_ano=2010 OR in_surdez=1) AND nu_ano_censo=2020"` in SQL
