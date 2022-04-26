@@ -46,7 +46,7 @@ def make_query(table: str, fields: list='*', filters: list=None,
     print(query)
     return query
 
-def make_query_sql(query: dict):
+def make_query_sql(query: dict) -> str:
     if 'field' not in query:
         raise Exception('Query Dictionary without "fields" param.')
 
