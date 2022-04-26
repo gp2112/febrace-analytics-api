@@ -110,7 +110,7 @@ To parse all the Query Tree, the algorithm uses an postorder tree transversal al
 
 '''
 
-def parse_where(query: dict, is_root: bool=False):
+def parse_where(query: dict, is_root: bool=False) -> str:
     # if it has 'field' paramter, it's a leaf
     # so, return the single query string
     if 'field' in query:
