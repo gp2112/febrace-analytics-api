@@ -1,6 +1,0 @@
-{
-    "docentes":"docentes_parquet",
-    "escolas":"escolas_parquet",
-    "matriculas":"matriculas-parquet",
-    "turmas":"turmas_parquet"
-}
