@@ -8,7 +8,7 @@ app = FastAPI()
 
 LIMIT = 100  # default limit
 queryResultLocation = "s3://mestrado-educacao/application-athena-query/"
-awsProfile = None
+awsProfile = 'febrace'
 awsCatalog = "AwsDataCatalog"
 
 
