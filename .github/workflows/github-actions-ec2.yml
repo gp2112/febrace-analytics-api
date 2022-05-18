@@ -1,4 +1,7 @@
 on:
+  workdlow_dispatch:
+    branches:
+      - main
   push:
     branches:
       - main 
