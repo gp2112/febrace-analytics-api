@@ -1,5 +1,5 @@
 on:
-  workdlow_dispatch:
+  workflow_dispatch:
     branches:
       - main
   push:
