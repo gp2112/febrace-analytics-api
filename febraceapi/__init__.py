@@ -3,6 +3,7 @@ import json
 from fastapi import FastAPI, Response
 
 from febraceapi.model import athena, get_table, query
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -16,6 +17,16 @@ def parse_fields(fields: str) -> list:
     fields = fields.replace('"', "").replace("'", "")  # prevent sqlinjection
     return fields.replace(" ", "").split(",")
 
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/{table}")
 async def query_table(
