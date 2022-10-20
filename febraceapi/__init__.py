@@ -1,7 +1,5 @@
 import json
-
 from fastapi import FastAPI, Response
-
 from febraceapi.model import athena, get_table, query
 from fastapi.middleware.cors import CORSMiddleware
 

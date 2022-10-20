@@ -1,4 +1,4 @@
-{ lib, python310, python310Packages, pkgs, callPackage, ... }:
+{ lib, python310Packages, pkgs, ... }:
 
 let
   vnumber = "1.0.0";
