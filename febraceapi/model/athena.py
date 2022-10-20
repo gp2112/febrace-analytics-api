@@ -1,15 +1,26 @@
+from botocore.config import Config
 import boto3
+import os
+import toml
 
-"""
-You mmust configure your aws credentials with aws cli.
-(you may use a profile)
+credentials_path = os.environ.get('AWS_CREDENTIALS_PATH',
+                                  '~/.aws/credentials')
 
-"""
+with open(credentials_path) as f:
+    aws_cred = toml.load(f)['febrace']
+
+ACCESS_KEY = aws_cred['ACCESS_KEY']
+SECRET_KEY = aws_cred['SECRET_KEY']
+REGION = aws_cred['REGION']
+
+aws_config = Config(
+    region_name=REGION
+)
 
 
 class Athena:
     def __init__(
-        self, catalog: str, database: str, result_loc: str, profile: str = None
+        self, catalog: str, database: str, result_loc: str, profile: str = 'febrace'
     ):
 
         self.__catalog = catalog
@@ -18,7 +29,12 @@ class Athena:
         self.__result_loc = result_loc
 
         if profile is None:
-            self.__client = boto3.client("athena")
+            self.__client = boto3.client(
+                    "athena",
+                    aws_access_key_id=ACCESS_KEY,
+                    aws_secret_access_key=SECRET_KEY,
+                    config=aws_config
+            )
         else:
             session = boto3.session.Session(profile_name=profile)
             self.__client = session.client("athena")
