@@ -1,6 +1,8 @@
 # Virtual Environment
 .env/*
 
+result/*
+
 # swap files
 *.swp
 

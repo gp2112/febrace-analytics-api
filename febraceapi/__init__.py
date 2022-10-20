@@ -76,3 +76,5 @@ async def columns(table: str, response: Response) -> dict:
 @app.get("/")
 async def root():
     return {"main": "root"}
+
+
