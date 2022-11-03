@@ -9,9 +9,9 @@ credentials_path = os.environ.get('AWS_CREDENTIALS_PATH',
 with open(credentials_path) as f:
     aws_cred = toml.load(f)['febrace']
 
-ACCESS_KEY = aws_cred['ACCESS_KEY']
-SECRET_KEY = aws_cred['SECRET_KEY']
-REGION = aws_cred['REGION']
+ACCESS_KEY = aws_cred['aws_access_key_id']
+SECRET_KEY = aws_cred['aws_secret_access_key']
+REGION = aws_cred['aws_region']
 
 aws_config = Config(
     region_name=REGION

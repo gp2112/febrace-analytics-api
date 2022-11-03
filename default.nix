@@ -17,6 +17,7 @@ python310Packages.buildPythonApplication rec {
     fastapi
     uvicorn
     setuptools
+    toml
   ];
 
   meta = with lib; {
