@@ -5,7 +5,7 @@ let
   cfg = config.services.febraceapi;
 in {
 
-  options.services.querolerbot = {
+  options.services.febraceapi = {
     enable = mkEnableOption "febraceapi service";
 
     package = mkOption {
@@ -31,11 +31,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.febraceapi.settings = {
-      general.delay = mkDefault 15;
-
-    };
-
 
     users.users.${cfg.user} = {
       home = "/var/${cfg.user}/";
