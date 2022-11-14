@@ -3,7 +3,6 @@
 with lib;
 let
   cfg = config.services.febraceapi;
-  settingsFormat = pkgs.formats.toml {};
 in {
 
   options.services.querolerbot = {
