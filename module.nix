@@ -45,8 +45,8 @@ in {
       description = "Febrace Middleware API";
       wantedBy = [ "multi-user.target" ];
       environment = {
-        AWS_CREDENTIALS_PATH = cfg.credentialsFile;
-        FEBRACEAPI_PORT = cfg.port;
+        AWS_CREDENTIALS_PATH = toString cfg.credentialsFile;
+        FEBRACEAPI_PORT = toString cfg.port;
       };
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/febraceapi";
